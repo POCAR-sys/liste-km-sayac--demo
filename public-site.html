@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Public Türk Riders Site Demo</title>
+<link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/cosmo/bootstrap.min.css" rel="stylesheet">
+<style>
+#kmScoreboard { position: fixed; bottom: 10px; right: 10px; width: 250px; background:white; border:1px solid #ccc; padding:10px; }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Türk Riders Public Site Demo</h1>
+<p>Normal site içerikleri burada...</p>
+</div>
+
+<!-- Scoreboard -->
+<div id="kmScoreboard">
+<h5>KM Scoreboard</h5>
+<table class="table table-condensed">
+<thead><tr><th>Nick</th><th>KM</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+
+<script>
+const tbody = document.querySelector('#kmScoreboard tbody');
+
+function updateScoreboard(){
+  const scores = JSON.parse(localStorage.getItem('scores') || '{}');
+  tbody.innerHTML = '';
+  Object.entries(scores).sort((a,b)=>b[1]-a[1]).forEach(([nick,km])=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML=`<td>${nick}</td><td>${km}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+// 2 saniyede bir güncelle
+setInterval(updateScoreboard,2000);
+updateScoreboard();
+</script>
+</body>
+</html>

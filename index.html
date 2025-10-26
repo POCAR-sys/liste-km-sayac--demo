@@ -1,0 +1,52 @@
+<!DOCTYPE html><html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liste Site Demo + KM Ekleme</title>
+<style>
+  body, html { margin:0; padding:0; font-family: Arial, sans-serif; height:100%; }
+  iframe { width:100%; height:100%; border:none; }/* KM Ekleme Kutusu */ #kmBox { position:fixed; bottom:20px; right:20px; width:300px; background:white; border:2px solid #0055aa; border-radius:8px; box-shadow:0 0 15px rgba(0,0,0,0.3); padding:1rem; z-index:9999; } #kmBox h3 { margin-top:0; text-align:center; } #kmBox input { width:100%; padding:0.4rem; margin:0.3rem 0; } #kmBox button { width:100%; padding:0.4rem; background:#0055aa; color:white; border:none; cursor:pointer; } #scoreBody { margin-top:0.5rem; } table { width:100%; border-collapse:collapse; } th, td { border:1px solid #ccc; padding:0.3rem; text-align:center; } th { background:#f0f0f0; } .gold { background:gold; } </style>
+
+</head>
+<body><!-- Liste Sitesinin iframe demo --><iframe src="https://trccliste.turkriders.org"></iframe><!-- KM Ekleme Formu ve Scoreboard --><div id="kmBox">
+  <h3>KM Ekleme (Koçlar)</h3>
+  <input type="password" id="pass" placeholder="Şifre (demo)">
+  <input type="text" id="nick" placeholder="Üye Nick">
+  <input type="number" id="km" placeholder="KM">
+  <button id="addBtn">Ekle / Güncelle</button>
+  <table>
+    <thead><tr><th>Üye</th><th>Toplam KM</th></tr></thead>
+    <tbody id="scoreBody"></tbody>
+  </table>
+</div><script>
+const addBtn = document.getElementById('addBtn');
+const nickInput = document.getElementById('nick');
+const kmInput = document.getElementById('km');
+const passInput = document.getElementById('pass');
+const scoreBody = document.getElementById('scoreBody');
+
+let scores = {};
+const DEMO_PASSWORD = '1234'; // demo şifre
+
+function updateTable(){
+  const sorted = Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+  scoreBody.innerHTML = '';
+  sorted.forEach(([nick, km], index)=>{
+    const tr = document.createElement('tr');
+    if(index===0) tr.classList.add('gold');
+    tr.innerHTML = `<td>${nick}</td><td>${km}</td>`;
+    scoreBody.appendChild(tr);
+  });
+}
+
+addBtn.addEventListener('click', ()=>{
+  if(passInput.value !== DEMO_PASSWORD){ alert('Yanlış şifre!'); return; }
+  const nick = nickInput.value.trim();
+  const km = parseInt(kmInput.value);
+  if(!nick || !km || km<=0){ alert('Geçerli nick ve KM girin'); return; }
+  scores[nick] = (scores[nick] || 0) + km;
+  updateTable();
+  nickInput.value=''; kmInput.value='';
+});
+</script></body>
+</html>
